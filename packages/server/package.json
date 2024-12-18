@@ -1,0 +1,23 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "npm run build && node dist/index.js",
+    "dev": "nodemon"
+  },
+  "author": "kekekuli",
+  "license": "MIT",
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "nodemon": "^3.1.9",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7"
+  }
+}

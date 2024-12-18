@@ -16,7 +16,7 @@ export default defineConfig(async ({mode}) => ({
     devUrl: "https://localhost:3000",
     prodUrl: "https://www.contoso.com" // CHANGE THIS TO YOUR PRODUCTION DEPLOYMENT LOCATION
   })],
-  root: "src",
+  root: "packages",
   build: {
     rollupOptions: {
       input: {
