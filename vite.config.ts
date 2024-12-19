@@ -27,5 +27,5 @@ export default defineConfig(async ({mode}) => ({
     outDir: "../dist",
     emptyOutDir: true
   },
-  server: mode !== "production" ? { https: await getHttpsOptions() } : {}
+  server: mode !== "production" ? { https: await getHttpsOptions() } : {},
 }));
