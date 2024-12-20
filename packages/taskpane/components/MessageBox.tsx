@@ -2,12 +2,9 @@ import React, { useState } from "react";
 import { Box, Stack, SxProps } from "@mui/system";
 import ExcelTable from "./ExcelTable";
 import {testTableDatas} from "../utils/TestDatas";
+import { Message } from "../utils/MessageParser";
+import { toast } from 'react-toastify';
 
-export interface Message{
-  role: "user" | "bot";
-  content: string;
-  renderTable?: boolean;
-}
 
 interface MessageBoxProps {
     messages: Message[];

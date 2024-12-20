@@ -7,7 +7,7 @@ interface BoxHeaderProps {
 
 export default function BoxHeader({ waitingResponse }: BoxHeaderProps) {
     return (
-        <div className='bg-blue-500 h-24 flex items-center justify-center text-white'>
+        <div className='bg-blue-500 min-h-12 flex items-center justify-center text-white'>
             {
                 waitingResponse ? (
                     <div className='flex items-center'>

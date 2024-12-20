@@ -4,9 +4,9 @@ import MessageBox from './MessageBox';
 import BoxHeader from './BoxHeader';
 import InputField from './InputField';
 import { testMessages } from '../utils/TestDatas';
-import type { Message } from './MessageBox';
-
-const serverURL = import.meta.env.VITE_SERVER_URL;
+import type { Message } from '../utils/MessageParser';
+import MessageParser from '../utils/MessageParser';
+import { ToastContainer } from 'react-toastify';
 
 export default function App() {
   const [waitingResponse, setWaitingResponse] = useState(false);
@@ -15,20 +15,22 @@ export default function App() {
   const messageEndRef = useRef<HTMLDivElement>(null);
 
   function handleSend(message: string) {
+    const response = MessageParser(message);
+
     // use arrow function to get the latest state
     setMessages((prevMessages) => [...prevMessages, { role: 'user', content: message }]);
     setWaitingResponse(() => true);
 
     // Simulate bot response after a delay
     setTimeout(() => {
-      const botMessage: Message = { role: 'bot', content: '为时已晚，有机体 '};
-      setMessages((prevMessages) => [...prevMessages, botMessage]);
+      setMessages((prevMessages) => [...prevMessages, response]);
       setWaitingResponse(() => false);
     }, 1000);
   }
 
   useEffect(() => {
     if (messageEndRef.current) {
+      // The "block" property should be set to "end", while default value is "start" causing unexpected behavior
       messageEndRef.current.scrollIntoView({ behavior: 'smooth' , block: "end"});
     }
   }, [messages]);
@@ -36,11 +38,12 @@ export default function App() {
   return (
     <Stack className='h-screen'>
       <BoxHeader waitingResponse={waitingResponse} />
-      <Box className=' overflow-y-scroll flex-grow max-h-full'>
-        <MessageBox messages={messages}/>
+      <Box className=' overflow-y-scroll flex-grow'>
+        <MessageBox messages={messages} />
         <div ref={messageEndRef}></div>
       </Box>
-      <InputField onSend={handleSend} waitingResponse={waitingResponse}/>
+      <InputField onSend={handleSend} waitingResponse={waitingResponse} />
+      <ToastContainer />
     </Stack>
   );
 }

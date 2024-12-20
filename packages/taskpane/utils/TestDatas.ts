@@ -1,4 +1,4 @@
-import type {Message} from "../components/MessageBox";
+import type {Message} from "../utils/MessageParser";
 
 export const testTableDatas = [
     [
@@ -230,10 +230,5 @@ export const testTableDatas = [
     ],
 ]
 export const testMessages : Message[] = [
-    { role: "user", content: "aaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbcccccccccccccccccddddddddddddddd" },
-    { role: "bot", content: "Hello,adfjakd;jfkasdjfklsdajkfldjsklfjkasldjfkasdjfklj User!" },
-    { role: "bot", content: "", renderTable: true },
-    { role: "bot", content: "", renderTable: true },
-    { role: "bot", content: "", renderTable: true },
     { role: "bot", content: "", renderTable: true },
   ];
