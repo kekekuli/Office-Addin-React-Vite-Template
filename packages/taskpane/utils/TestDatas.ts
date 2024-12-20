@@ -1,4 +1,6 @@
-const testDatas = [
+import type {Message} from "../components/MessageBox";
+
+export const testTableDatas = [
     [
         [
             "Brand",
@@ -227,4 +229,11 @@ const testDatas = [
         ]
     ],
 ]
-export default testDatas;
+export const testMessages : Message[] = [
+    { role: "user", content: "aaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbcccccccccccccccccddddddddddddddd" },
+    { role: "bot", content: "Hello,adfjakd;jfkasdjfklsdajkfldjsklfjkasldjfkasdjfklj User!" },
+    { role: "bot", content: "", renderTable: true },
+    { role: "bot", content: "", renderTable: true },
+    { role: "bot", content: "", renderTable: true },
+    { role: "bot", content: "", renderTable: true },
+  ];

@@ -1,31 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Stack, SxProps } from "@mui/system";
 import ExcelTable from "./ExcelTable";
-import testDatas from "../utils/TestDatas";
+import {testTableDatas} from "../utils/TestDatas";
 
-
-interface Message{
+export interface Message{
   role: "user" | "bot";
   content: string;
   renderTable?: boolean;
 }
 
-function getHistory() : Message[] {
-  return [
-    { role: "user", content: "aaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbcccccccccccccccccddddddddddddddd" },
-    { role: "bot", content: "Hello,adfjakd;jfkasdjfklsdajkfldjsklfjkasldjfkasdjfklj User!" },
-    { role: "bot", content: "", renderTable: true },
-    { role: "bot", content: "", renderTable: true },
-    { role: "bot", content: "", renderTable: true },
-    { role: "bot", content: "", renderTable: true },
-  ];
+interface MessageBoxProps {
+    messages: Message[];
 }
 
-export default function MessageBox(){
-    const tableData = testDatas[0];
+export default function MessageBox({ messages }: MessageBoxProps) {
+    
+    const tableData = testTableDatas[0];
 
-    const history = getHistory();
-    const renderItems = history.map((message, index) => {
+    const renderItems = messages.map((message, index) => {
         let wrapperAppend = message.role === "user" ? "justify-end" : "justify-start";
         let boxAppend = message.role === "user" ? "mr-3" : "ml-3";
 
