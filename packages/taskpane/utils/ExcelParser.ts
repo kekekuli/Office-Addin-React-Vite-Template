@@ -1,6 +1,7 @@
 import * as XLSX from 'xlsx';
+import { ExcelTableData } from '../components/ExcelTable';
 
-export async function parseExcelTableToJson(tableName: string): Promise<any[]> {
+export async function parseExcelTableToJson(tableName: string): Promise<ExcelTableData> {
   return await Excel.run(async (context) => {
     const table = context.workbook.tables.getItem(tableName);
     const tableRange = table.getRange();
@@ -9,7 +10,12 @@ export async function parseExcelTableToJson(tableName: string): Promise<any[]> {
     const data = tableRange.values;
     const worksheet = XLSX.utils.aoa_to_sheet(data);
     const targetTableInJson = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-    return targetTableInJson;
+
+    return {
+      tableName: tableName,
+      header: targetTableInJson[0] as any[],
+      rows: targetTableInJson.slice(1),
+    }
   });
 }
 export async function getExcelTableNames(): Promise<string[]> {

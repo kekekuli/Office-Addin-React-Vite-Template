@@ -1,13 +1,14 @@
+import type { ExcelTableData } from "../components/ExcelTable";
 export interface Message{
   role: "user" | "bot";
   content: string;
-  renderTable?: boolean;
+  excelTable?: ExcelTableData;
 }
 
-export default function MessageParser(message : string) : Message{
+export default function MessageParser(message : string, excelTable : ExcelTableData | null) : Message{
   switch (message) {
     case "Sort the table by sales in descending order":
-      return {role: "bot", content: "You want sort"};
+      return handleSort(excelTable);
     case "Create a scatter plot of sales and costs":
       return {role: "bot", content: "You want scatter"};
     case "Insert a column of profits":
@@ -17,4 +18,17 @@ export default function MessageParser(message : string) : Message{
     default:
       return {role: "bot", content: "No support for this command"};
   }
+}
+
+function handleSort(excelTable: ExcelTableData | null) : Message{
+  if (!excelTable)
+    return {role: "bot", content: "No table to sort"};
+  return {role: "bot", content: "You want sort"};
+}
+
+function handleScatter(){
+
+}
+function handleInsert(){
+
 }

@@ -5,23 +5,25 @@ import { AllCommunityModule, FirstDataRenderedEvent, ModuleRegistry } from 'ag-g
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 interface ExcelTableProps {
-    tabelValues: any[];
+    excelTable: ExcelTableData;
+}
+export interface ExcelTableData {
+  tableName: string;
+  header: any[];
+  rows: any[];
 }
 
-export default function ExcelTable({ tabelValues }: ExcelTableProps) {
+export default function ExcelTable({ excelTable }: ExcelTableProps) {
     const getColumnDefs = () => {
-        return tabelValues[0] ?
-            tabelValues[0].map((header: string) => {
-                return { headerName: header, field: header };
-            })
-            : [];
+        return excelTable.header.map((header: string) => {
+            return { headerName: header, field: header };
+        })
     }
 
     const getRowData = () => {
-        const rows = tabelValues.slice(1);
-        return rows.map((row) => {
+        return excelTable.rows.map((row) => {
             const rowData = {};
-            tabelValues[0].forEach((header, index) => {
+            excelTable.header.forEach((header, index) => {
                 rowData[header] = row[index];
             });
             return rowData;
