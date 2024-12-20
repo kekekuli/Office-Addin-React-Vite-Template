@@ -1,11 +1,12 @@
-import React, {useState} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {Box, TextField, Button} from '@mui/material';
 
 interface InputFieldProps {
+    waitingResponse: boolean;
     onSend: (message: string) => void;  
 }
 
-export default function InputField({onSend}: InputFieldProps){
+export default function InputField({onSend, waitingResponse}: InputFieldProps){
     const [inputValue, setInputValue] = useState<string>('');
 
     function handleSend(){
@@ -13,7 +14,6 @@ export default function InputField({onSend}: InputFieldProps){
         setInputValue('');
     }
 
-    console.log("rerender input field");
     return (
         <Box className="h-fit flex m-2">
             <TextField 
@@ -27,10 +27,14 @@ export default function InputField({onSend}: InputFieldProps){
                 onKeyDown={(e) => {
                     if(e.key === 'Enter')
                         handleSend();
-                }}></TextField>
+                }}
+                disabled={waitingResponse}
+                inputRef={(input) => {input && input.focus();}}
+                ></TextField>
             <Button 
                 className='h-full'
-                onClick={handleSend}>
+                onClick={handleSend}
+                disabled={waitingResponse}>
                 Send</Button>
         </Box>
     )
