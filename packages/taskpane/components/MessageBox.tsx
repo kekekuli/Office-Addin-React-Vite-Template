@@ -15,6 +15,9 @@ function getHistory() : Message[] {
     { role: "user", content: "aaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbcccccccccccccccccddddddddddddddd" },
     { role: "bot", content: "Hello,adfjakd;jfkasdjfklsdajkfldjsklfjkasldjfkasdjfklj User!" },
     { role: "bot", content: "", renderTable: true },
+    { role: "bot", content: "", renderTable: true },
+    { role: "bot", content: "", renderTable: true },
+    { role: "bot", content: "", renderTable: true },
   ];
 }
 
@@ -38,8 +41,7 @@ export default function MessageBox(){
         return (
             <div className={'flex' + ' ' + wrapperAppend} key={index}>
                 <Box className={'border rounded-lg p-3' + ' ' + boxAppend}
-                    sx={sx}
-                >
+                    sx={sx}>
                     {message.renderTable ? <ExcelTable tabelValues={tableData}></ExcelTable> : message.content}
                 </Box>
             </div>
@@ -47,7 +49,7 @@ export default function MessageBox(){
     })
 
     return (
-        <Stack spacing={2} sx={{ flexGrow: 1}}>
+        <Stack spacing={2}>
             {renderItems}
         </Stack>
     )

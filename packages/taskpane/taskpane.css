@@ -1,6 +1,9 @@
 body{
     background-color: aliceblue;
 }
+html{
+    overflow: hidden
+}
 
 
 @tailwind base;

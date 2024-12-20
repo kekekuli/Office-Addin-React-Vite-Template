@@ -10,7 +10,9 @@ export default function App() {
   return (
     <Stack sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
       <BoxHeader />
-      <MessageBox />
+      <Box sx={{ flex: 1, overflow: 'auto' }}>
+        <MessageBox />
+      </Box>
       <InputField />
     </Stack>
   );
