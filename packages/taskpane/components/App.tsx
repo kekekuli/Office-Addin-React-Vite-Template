@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Box, Stack, Backdrop } from '@mui/material';
-import MessageBox from './MessageBox';
+import MessageBox from './MessageList';
 import BoxHeader from './BoxHeader';
 import InputField from './InputField';
 import { testMessages } from '../utils/TestDatas';
