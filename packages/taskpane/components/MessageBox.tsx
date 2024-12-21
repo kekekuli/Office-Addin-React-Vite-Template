@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { Box, Stack, SxProps } from "@mui/system";
 import ExcelTable from "./ExcelTable";
 import { Message } from "../utils/MessageParser";
@@ -10,6 +10,15 @@ interface MessageBoxProps {
 }
 
 export default function MessageBox({ messages }: MessageBoxProps) {
+    // Handle auto scroll of message box
+    const messageEndRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (messageEndRef.current) {
+            // The "block" property should be set to "end", while default value is "start" causing unexpected behavior
+            messageEndRef.current.scrollIntoView({ behavior: 'smooth', block: "end" });
+        }
+    }, [messages]);
     const renderItems = messages.map((message, index) => {
         let wrapperAppend = message.role === "user" ? "justify-end" : "justify-start";
         let boxAppend = message.role === "user" ? "mr-3" : "ml-3";
@@ -22,7 +31,7 @@ export default function MessageBox({ messages }: MessageBoxProps) {
             maxWidth: "60%",
             wordWrap: "break-word",
         }
-        if (message.scatter) 
+        if (message.scatter)
             sx.height = "fit-content";
 
         // return the wrapper and contents
@@ -37,8 +46,11 @@ export default function MessageBox({ messages }: MessageBoxProps) {
     })
 
     return (
-        <Stack spacing={2}>
-            {renderItems}
-        </Stack>
+        <>
+            <Stack spacing={2}>
+                {renderItems}
+            </Stack>
+            <div ref={messageEndRef}></div>
+        </>
     )
 }
