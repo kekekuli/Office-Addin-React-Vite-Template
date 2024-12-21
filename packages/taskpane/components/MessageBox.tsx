@@ -22,12 +22,15 @@ export default function MessageBox({ messages }: MessageBoxProps) {
             maxWidth: "60%",
             wordWrap: "break-word",
         }
+        if (message.scatter) 
+            sx.height = "fit-content";
+
         // return the wrapper and contents
         return (
             <div className={'flex' + ' ' + wrapperAppend} key={index}>
                 <Box className={'border rounded-lg p-3' + ' ' + boxAppend}
                     sx={sx}>
-                    {message.excelTable ? <ExcelTable excelTable={message.excelTable!}></ExcelTable> : message.content}
+                    {message.excelTable ? <ExcelTable excelTable={message.excelTable!} scatter={message.scatter}></ExcelTable> : message.content}
                 </Box>
             </div>
         )

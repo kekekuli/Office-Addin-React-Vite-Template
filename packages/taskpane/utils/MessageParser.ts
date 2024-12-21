@@ -3,6 +3,7 @@ export interface Message{
   role: "user" | "bot";
   content: string;
   excelTable?: ExcelTableData;
+  scatter?: boolean;
 }
 
 export default function MessageParser(message : string, excelTable : ExcelTableData | null) : Message{
@@ -10,7 +11,7 @@ export default function MessageParser(message : string, excelTable : ExcelTableD
     case "Sort the table by sales in descending order":
       return handleSort(excelTable);
     case "Create a scatter plot of sales and costs":
-      return {role: "bot", content: "You want scatter"};
+      return handleScatter(excelTable);
     case "Insert a column of profits":
       return handleInsert(excelTable);
     case "kekekuli":
@@ -21,6 +22,7 @@ export default function MessageParser(message : string, excelTable : ExcelTableD
 }
 
 function handleSort(excelTable: ExcelTableData | null) : Message{
+  // In fact, this condition should not be entered
   if (!excelTable)
     return {role: "bot", content: "No table to sort"};
 
@@ -37,9 +39,12 @@ function handleSort(excelTable: ExcelTableData | null) : Message{
   return { role: "bot", content: "Sorted table", excelTable: sortedTable };
 }
 
-function handleScatter(){
-
+function handleScatter(excelTable: ExcelTableData | null) : Message{
+  if (!excelTable)
+    return {role: "bot", content: "No table to create scatter"};
+  return {role: "bot", content: "create scatter", excelTable: excelTable, scatter: true};
 }
+
 function handleInsert(excelTable: ExcelTableData | null): Message {
   if (!excelTable)
     return { role: "bot", content: "No table to insert into" };

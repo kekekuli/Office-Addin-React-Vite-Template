@@ -24,10 +24,14 @@
     "validate": "office-addin-manifest validate packages/manifest.xml"
   },
   "dependencies": {
+    "@ag-grid-community/core": "^32.3.3",
+    "@ag-grid-community/react": "^32.3.3",
+    "@ag-grid-enterprise/charts": "^32.3.3",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@fluentui/react": "^8.52.3",
     "@mui/material": "^6.2.1",
+    "ag-charts-react": "^11.0.3",
     "ag-grid-community": "^33.0.2",
     "ag-grid-react": "^33.0.2",
     "axios": "^1.7.9",
