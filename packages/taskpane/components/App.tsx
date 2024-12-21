@@ -11,6 +11,7 @@ import ExcelParserContainer from './ExcelParserContainer';
 import { parseExcelTableToJson, getExcelTableNames } from '../utils/ExcelParser';
 import { toastOptins } from '../utils/ToastConfig';
 import { toast } from 'react-toastify';
+import { DateTime } from 'luxon';
 
 export default function App() {
   const [waitingResponse, setWaitingResponse] = useState(false);
@@ -23,9 +24,10 @@ export default function App() {
   // Handle user input
   function handleSend(message: string) {
     const response = MessageParser(message, excelTableData);
+    const timestamp = DateTime.now().toISO();
 
     // use arrow function to get the latest state
-    setMessages((prevMessages) => [...prevMessages, { role: 'user', content: message }]);
+    setMessages((prevMessages) => [...prevMessages, { role: 'user', content: message, timestap: timestamp }]);
     setWaitingResponse(() => true);
 
     // Simulate bot response after a delay

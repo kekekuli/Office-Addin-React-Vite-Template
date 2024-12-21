@@ -1,4 +1,5 @@
 import type { ExcelTableData } from "../components/ExcelTable";
+import {DateTime} from "luxon";
 export interface Message{
   role: "user" | "bot";
   content: string;
@@ -6,20 +7,23 @@ export interface Message{
   scatter?: boolean;
   sort?: boolean;
   insert?: boolean;
+  timestap?: string;
 }
 
 export default function MessageParser(message : string, excelTable : ExcelTableData | null) : Message{
+  const timestamp = DateTime.now().toISO();
+
   switch (message) {
     case "Sort the table by sales in descending order":
-      return handleSort(excelTable);
+      return {...handleSort(excelTable), timestap: timestamp};
     case "Create a scatter plot of sales and costs":
-      return handleScatter(excelTable);
+      return {...handleScatter(excelTable), timestap: timestamp};
     case "Insert a column of profits":
-      return handleInsert(excelTable);
+      return {...handleInsert(excelTable), timestap: timestamp};
     case "kekekuli":
-      return {role: "bot", content: "为时已晚，有机体!"};
+      return {role: "bot", content: "为时已晚，有机体!", timestap: timestamp};
     default:
-      return {role: "bot", content: "No support for this command"};
+      return {role: "bot", content: "No support for this command", timestap: timestamp};
   }
 }
 

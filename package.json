@@ -36,6 +36,7 @@
     "ag-grid-react": "^33.0.2",
     "axios": "^1.7.9",
     "express": "^4.21.2",
+    "luxon": "^3.5.0",
     "react": "^18.2.0",
     "react-chat-elements": "^12.0.17",
     "react-dom": "^18.2.0",
@@ -44,6 +45,7 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@types/luxon": "^3.4.2",
     "@types/office-js": "^1.0.256",
     "@types/office-runtime": "^1.0.23",
     "@types/react": "^18.0.28",
