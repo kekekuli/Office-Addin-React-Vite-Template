@@ -77,8 +77,8 @@ export default function ChatBubble({ position, children, message }: ChatBubblePr
     )
     const leftSidebar = (
         <Box className='flex flex-col justify-start' sx={{maxWidth: '20%'}}>
-            {shortInfo.length > 0 && <Box className='text-xs mt-auto mr-1 mb-1'>{shortInfo}</Box>}
             {excelTable && !isLeft && applyButton }
+            {shortInfo.length > 0 && <Box className='text-xs mt-auto mr-1 mb-1'>{shortInfo}</Box>}
         </Box>
     )
 

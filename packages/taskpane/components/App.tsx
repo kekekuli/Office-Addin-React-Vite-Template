@@ -12,6 +12,8 @@ import { parseExcelTableToJson, getExcelTableNames } from '../utils/ExcelParser'
 import { toastOptins } from '../utils/ToastConfig';
 import { toast } from 'react-toastify';
 import { DateTime } from 'luxon';
+import type { Message } from '../utils/MessageParser';
+import { sendMessage } from '../utils/DatabaseUtils';
 
 export default function App() {
   const [waitingResponse, setWaitingResponse] = useState(false);
@@ -23,18 +25,21 @@ export default function App() {
 
   // Handle user input
   function handleSend(message: string) {
-    const response = MessageParser(message, excelTableData);
     const timestamp = DateTime.now().toISO();
+    const newMessage: Message = { role: 'user', content: message, timestap: timestamp };
 
-    // use arrow function to get the latest state
-    setMessages((prevMessages) => [...prevMessages, { role: 'user', content: message, timestap: timestamp }]);
     setWaitingResponse(() => true);
+    sendMessage(newMessage).then(() => {
+      const response = MessageParser(message, excelTableData);
+      // use arrow function to get the latest state
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
 
-    // Simulate bot response after a delay
-    setTimeout(() => {
-      setMessages((prevMessages) => [...prevMessages, response]);
-      setWaitingResponse(() => false);
-    }, 1000);
+      // Simulate bot response after a delay
+      setTimeout(() => {
+        setMessages((prevMessages) => [...prevMessages, response]);
+        setWaitingResponse(() => false);
+      }, 1000);
+    }).catch();
   }
 
   useEffect(() => {

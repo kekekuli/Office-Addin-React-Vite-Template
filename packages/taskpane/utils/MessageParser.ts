@@ -7,7 +7,7 @@ export interface Message{
   scatter?: boolean;
   sort?: boolean;
   insert?: boolean;
-  timestap?: string;
+  timestap?: string; // In ISO 8601
 }
 
 export default function MessageParser(message : string, excelTable : ExcelTableData | null) : Message{

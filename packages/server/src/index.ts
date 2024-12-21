@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import sqlite3 from 'sqlite3';
-import { open } from 'sqlite';
+import { open, Database } from 'sqlite';
 
 async function openDB() {
   return open({
@@ -11,9 +11,20 @@ async function openDB() {
   });
 }
 
+let db: Database | null = null;
+
 async function setup() {
-  const db = await openDB();
-  console.log('Database opened: ', db);
+  await openDB().then((database) => {
+    db = database;
+  }).then(async ()=>{
+    await db!.exec(`
+    CREATE TABLE IF NOT EXISTS messages (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      message TEXT NOT NULL
+    )
+  `);
+    console.log('Table "messages" is ready.');
+  });
 }
 
 const app = express();
@@ -24,9 +35,16 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // 路由
-app.post('/api/saveTableData', async (req, res) => {
-    console.log(req.body);
-    return;
+app.post('/api/saveMessages', async (req, res) => {
+  const {message} = req.body;  
+
+  if (db){
+    db.run('INSERT INTO messages (message) VALUES (?)', [JSON.stringify(message)]).then((result) => {
+      console.log('Message saved', message, "id is", result.lastID);
+    }).catch((error) => {
+      console.error(error);
+    });
+  }
 });
 
 // 启动服务器
