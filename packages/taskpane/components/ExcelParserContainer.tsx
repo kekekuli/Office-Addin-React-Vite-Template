@@ -11,6 +11,7 @@ interface ExcelParserContainerProps {
     children?: React.ReactNode;
 }
 
+// Provide data cached in message
 function handleApply(message: Message) {
     if (!message.excelTable) {
         toast.error('No Excel Data Available', toastOptins);
@@ -62,7 +63,7 @@ function handleScatter(excelTable: ExcelTableData) {
 
                 let seriesCollection = chart.series;
                 chart.title.text = 'Sales Vs Costs';
-                let series = seriesCollection.add("Sales and Temperature");
+                let series = seriesCollection.add("Sales and Costs");
                 series.setXAxisValues(rangeX);
                 series.setValues(rangeY);
                 await context.sync(); 
@@ -74,28 +75,31 @@ function handleScatter(excelTable: ExcelTableData) {
     });
 }
 
+// Replace the table data with the provided data
 async function replaceTableData(excelTable: ExcelTableData) {
     await Excel.run(async (context) => {
         const table = context.workbook.tables.getItem(excelTable.tableName);
-        const tableRange = table.getDataBodyRange();
-        tableRange.clear(); // Clear existing data
-        tableRange.load('rowCount,columnCount');
+
+        const headerRange = table.getHeaderRowRange();
+        const rowsRange = table.getDataBodyRange();
+        rowsRange.clear(); // Clear existing data
+        rowsRange.load('rowCount,columnCount');
         await context.sync();
 
-        const currentRowCount = tableRange.rowCount;
-        const currentColumnCount = tableRange.columnCount;
-
+        const currentRowCount = rowsRange.rowCount;
+        const currentColumnCount = rowsRange.columnCount;
         // Resize the table to fit the new data
         const newRowCount = excelTable.rows.length;
         const newColumnCount = excelTable.header.length;
         table.resize(table.getRange().getResizedRange(newRowCount - currentRowCount, newColumnCount - currentColumnCount));
         await context.sync();
 
-        const headerRange = table.getHeaderRowRange();
-        headerRange.values = [excelTable.header]; // Set new header
-
-        const dataRange = table.getDataBodyRange(); 
-        dataRange.values = excelTable.rows; // Set new data
+        const afterResizedHeaderRange = table.getHeaderRowRange();
+        // Can not clear the header before resizing the table
+        headerRange.clear(); // Clear existing header
+        afterResizedHeaderRange.values = [excelTable.header]; // Set new header
+        const afterResizedRowsRange = table.getDataBodyRange(); 
+        afterResizedRowsRange.values = excelTable.rows; // Set new data
         await context.sync();
     }).then(() => {
         toast.success('Table data replaced successfully', toastOptins);

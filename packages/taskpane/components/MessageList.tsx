@@ -19,24 +19,10 @@ export default function MessageBox({ messages }: MessageListProps) {
         }
     }, [messages]);
     const renderItems = messages.map((message, index) => {
-        let wrapperAppend = message.role === "user" ? "justify-end" : "justify-start";
-        let boxAppend = message.role === "user" ? "mr-3" : "ml-3";
-
-        // Set the style of the box depending on the table or text
-        let sx: SxProps = message.excelTable ? {
-            width: "80%",
-            height: "300px",
-        } : {
-            maxWidth: "60%",
-            wordWrap: "break-word",
-        }
-        if (message.scatter)
-            sx.height = "fit-content";
-
         // return the wrapper and contents
         return (
             <ChatBubble position={message.role === "user" ? "right" : "left"} key={index} message={message}>
-                {message.insert && <Box className={boxAppend}>This will insert new column "Profits = Sales - Costs"</Box>}
+                {message.insert && <Box>This will insert new column "Profits = Sales - Costs"</Box>}
                 {message.excelTable ? <ExcelTable excelTable={message.excelTable!} scatter={message.scatter}></ExcelTable> : message.content}
             </ChatBubble>
         )
@@ -46,7 +32,6 @@ export default function MessageBox({ messages }: MessageListProps) {
         <>
             <Stack spacing={2}>
                 {renderItems}
-                {/* <ChatBubble position="left">Hello</ChatBubble> */}
             </Stack>
             <div ref={messageEndRef}></div>
         </>
