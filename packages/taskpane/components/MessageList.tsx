@@ -8,6 +8,7 @@ interface MessageListProps {
     messages: Message[];
 }
 
+
 export default function MessageBox({ messages }: MessageListProps) {
     // Handle auto scroll of message box
     const messageEndRef = useRef<HTMLDivElement>(null);
