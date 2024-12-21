@@ -35,7 +35,7 @@ export default function MessageBox({ messages }: MessageListProps) {
 
         // return the wrapper and contents
         return (
-            <ChatBubble position={message.role === "user" ? "right" : "left"} key={index} excelTable={message.excelTable} scatter={message.scatter}>
+            <ChatBubble position={message.role === "user" ? "right" : "left"} key={index} message={message}>
                 {message.excelTable ? <ExcelTable excelTable={message.excelTable!} scatter={message.scatter}></ExcelTable> : message.content}
             </ChatBubble>
         )

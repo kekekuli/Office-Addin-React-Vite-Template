@@ -4,6 +4,8 @@ export interface Message{
   content: string;
   excelTable?: ExcelTableData;
   scatter?: boolean;
+  sort?: boolean;
+  insert?: boolean;
 }
 
 export default function MessageParser(message : string, excelTable : ExcelTableData | null) : Message{
@@ -36,7 +38,7 @@ function handleSort(excelTable: ExcelTableData | null) : Message{
     rows: copiedRows
   };
 
-  return { role: "bot", content: "Sorted table", excelTable: sortedTable };
+  return { role: "bot", content: "Sorted table", excelTable: sortedTable , sort: true};
 }
 
 function handleScatter(excelTable: ExcelTableData | null) : Message{
@@ -70,5 +72,5 @@ function handleInsert(excelTable: ExcelTableData | null): Message {
     rows: newRows
   };
 
-  return { role: "bot", content: "Inserted Profits column", excelTable: updatedTable };
+  return { role: "bot", content: "Inserted Profits column", excelTable: updatedTable, insert: true };
 }

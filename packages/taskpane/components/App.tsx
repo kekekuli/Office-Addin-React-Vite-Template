@@ -29,15 +29,20 @@ export default function App() {
     }, 1000);
   }
 
+  console.log("render App");
+
   return (
-    <Stack className='h-screen'>
-      <BoxHeader waitingResponse={waitingResponse} />
-      <Box className=' overflow-y-scroll flex-grow'>
-        <MessageBox messages={messages} />
-      </Box>
-      <InputField onSend={handleSend} waitingResponse={waitingResponse} />
+    <>
+      <ExcelParserContainer excelTableData={null} setExcelTableData={setExcelTableData} key="ExcelParserContainer">
+        <Stack className='h-screen'>
+          <BoxHeader waitingResponse={waitingResponse} />
+          <Box className=' overflow-y-scroll flex-grow'>
+            <MessageBox messages={messages} />
+          </Box>
+          <InputField onSend={handleSend} waitingResponse={waitingResponse} />
+        </Stack>
+      </ExcelParserContainer>
       <ToastContainer />
-      <ExcelParserContainer setExcelTableData={setExcelTableData} />      
-    </Stack>
+    </>
   );
 }
