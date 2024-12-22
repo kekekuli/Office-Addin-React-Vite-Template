@@ -9,25 +9,27 @@ import type { Message } from '../utils/MessageParser';
 interface ExcelParserContainerProps {
     excelTableData: ExcelTableData | null;
     children?: React.ReactNode;
+    applyCallback: () => void;
 }
 
 // Provide data cached in message
-function handleApply(message: Message) {
+function handleApply(message: Message) : Promise<void> {
     if (!message.excelTable) {
         toast.error('No Excel Data Available', toastOptins);
-        return;
+        return Promise.reject();
     }
 
     if (message.sort || message.insert)
-        replaceTableData(message.excelTable);
+        return replaceTableData(message.excelTable);
     else if (message.scatter)
-        handleScatter(message.excelTable);
+        return handleScatter(message.excelTable);
     else
         toast.error('No operation to apply', toastOptins);
+    return Promise.reject();
 }
 
-function handleScatter(excelTable: ExcelTableData) {
-    replaceTableData(excelTable).then(
+function handleScatter(excelTable: ExcelTableData) : Promise<void>{
+    return replaceTableData(excelTable).then(
         async () => {
             await Excel.run(async (context) => {
                 const salesIndex = excelTable.header.indexOf("Sales");
@@ -109,10 +111,11 @@ async function replaceTableData(excelTable: ExcelTableData) {
     });
 }
 
-export default function ExcelParserContainer({ excelTableData, children }: ExcelParserContainerProps) {
-
+export default function ExcelParserContainer({ excelTableData, children, applyCallback }: ExcelParserContainerProps) {
     return (
-        <ApplyOperationContext.Provider value={(message) => handleApply(message)}>
+        <ApplyOperationContext.Provider value={(message) => {
+            handleApply(message).then(applyCallback);
+        }}>
             {children}
             <Backdrop
                 sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}

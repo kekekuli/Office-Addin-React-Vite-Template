@@ -20,9 +20,6 @@ export default function App() {
   const [messages, setMessages] = useState(testMessages);
   const [excelTableData, setExcelTableData] = useState<ExcelTableData | null>(null);
 
-  // Use ref to check if the toast is already displayed when in strict mode
-  const isDisplayedLoadStatus = useRef(false);
-
   // Handle user input
   function handleSend(message: string) {
     const timestamp = DateTime.now().toISO();
@@ -72,39 +69,44 @@ export default function App() {
     })
   }
 
-  useEffect(() => {
-    Office.onReady().then(() => {
-      getExcelTableNames().then((tableNames) => {
-        parseExcelTableToJson(tableNames[0]).then((excelTable) => {
-          setExcelTableData(excelTable);
-        }).then(() => {
-          if (isDisplayedLoadStatus.current) return;
-          toast.success('Excel data loaded successfully', toastOptins);
-        }).catch((error) => {
-          if (isDisplayedLoadStatus.current) return;
-          console.error(error);
-          toast.error('Can not read the table, reopen one that available', {
-            ...toastOptins,
-            position: 'top-center',
-            autoClose: false,
-            closeButton: false,
-            hideProgressBar: true,
-            draggable: false,
-            theme: 'dark',
-            closeOnClick: false,
-          });
-        }).finally(() => {
-          // There is still a chance that the toast is displayed twice when entered race condition on StrictMode
-          isDisplayedLoadStatus.current = true;
-        })
+  function readExcelTable() {
+    getExcelTableNames().then((tableNames) => {
+      parseExcelTableToJson(tableNames[0]).then((excelTable) => {
+        setExcelTableData(excelTable);
       })
-    });
+    })
+  }
+
+  // Use ref to check if the toast is already displayed when in strict mode
+  const isDisplayedToast = useRef(false);
+
+  useEffect(() => {
+    Office.onReady().then(readExcelTable).then(() => {
+
+      if (isDisplayedToast.current) return;
+      toast.success('Excel data loaded successfully', toastOptins);
+      isDisplayedToast.current = true;
+    }).catch((error) => {
+      if (isDisplayedToast.current) return;
+      isDisplayedToast.current = true;
+      console.error(error);
+      toast.error('Can not read the table, reopen one that available', {
+        ...toastOptins,
+        position: 'top-center',
+        autoClose: false,
+        closeButton: false,
+        hideProgressBar: true,
+        draggable: false,
+        theme: 'dark',
+        closeOnClick: false,
+      });
+    })
   }, []);
 
   return (
-    <ExcelParserContainer excelTableData={excelTableData} >
+    <ExcelParserContainer excelTableData={excelTableData} applyCallback={readExcelTable}>
       <Stack className='h-screen'>
-        <BoxHeader waitingResponse={waitingResponse} onClear={handleClearMessages}/>
+        <BoxHeader waitingResponse={waitingResponse} onClear={handleClearMessages} />
         <Box className=' overflow-y-scroll flex-grow'>
           <MessageBox messages={messages} />
         </Box>
