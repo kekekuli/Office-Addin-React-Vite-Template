@@ -66,6 +66,9 @@ export default function App() {
     })
   }, []);
 
+  const handleClearMessages = () => {
+  }
+
   useEffect(() => {
     Office.onReady().then(() => {
       getExcelTableNames().then((tableNames) => {
@@ -98,7 +101,7 @@ export default function App() {
   return (
     <ExcelParserContainer excelTableData={excelTableData} >
       <Stack className='h-screen'>
-        <BoxHeader waitingResponse={waitingResponse} />
+        <BoxHeader waitingResponse={waitingResponse} onClear={handleClearMessages}/>
         <Box className=' overflow-y-scroll flex-grow'>
           <MessageBox messages={messages} />
         </Box>

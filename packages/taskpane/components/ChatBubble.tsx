@@ -22,10 +22,10 @@ function convertDateTimeToShortString(dateTime: luxonDataTime | null): string {
     if (diff.days === undefined) 
         return "";
 
-    if (diff.days < 1) {
+    if (diff.days < 1 && dateTime.day === now.day) {
         return dateTime.toFormat('HH:mm');
-    } else if (diff.days < 2) {
-        return 'yeserday';
+    } else if (diff.days < 2 ) {
+        return 'yeserday' ;
     } else if (diff.days < 3) {
         return '2 days ago';
     } else if (dateTime.weekNumber === now.weekNumber) {
