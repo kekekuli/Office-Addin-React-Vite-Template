@@ -38,7 +38,7 @@ function convertDateTimeToShortString(dateTime: luxonDataTime | null): string {
 export default function ChatBubble({ position, children, message }: ChatBubbleProps) {
     const isLeft = position === 'left';
     const wrapperAppend = isLeft ? 'justify-start' : 'justify-end';
-    const { excelTable, scatter } = message;
+    const { excelTable, scatter, savedId } = message;
 
     const handleApply = useContext(ApplyOperationContext);
 
@@ -62,6 +62,12 @@ export default function ChatBubble({ position, children, message }: ChatBubblePr
     let shortInfo = "";
     if (message.timestap)
         shortInfo = convertDateTimeToShortString(DateTime.fromISO(message.timestap));
+    if (!message.savedId){
+        if (position === 'left')
+            shortInfo = shortInfo + ' (unsaved)';
+        else
+            shortInfo = "(unsaved)" + shortInfo;
+    }
 
     const applyButton = (
         <Button onClick={() => {
@@ -78,7 +84,8 @@ export default function ChatBubble({ position, children, message }: ChatBubblePr
     const leftSidebar = (
         <Box className='flex flex-col justify-start' sx={{maxWidth: '20%'}}>
             {excelTable && !isLeft && applyButton }
-            {shortInfo.length > 0 && <Box className='text-xs mt-auto mr-1 mb-1'>{shortInfo}</Box>}
+            {shortInfo.length > 0 && 
+            <Box className='text-xs mt-auto mr-1 mb-1'>{shortInfo}</Box>}
         </Box>
     )
 
