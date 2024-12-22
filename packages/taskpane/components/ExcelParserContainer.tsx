@@ -1,6 +1,6 @@
 import type { ExcelTableData } from './ExcelTable';
 import React, { useEffect, useRef, useState } from 'react';
-import { Backdrop } from '@mui/material';
+import { Backdrop, tableCellClasses } from '@mui/material';
 import { toastOptins } from '../utils/ToastConfig';
 import { toast } from 'react-toastify';
 import { ApplyOperationContext } from '../utils/ApplyOperationContext';
@@ -19,13 +19,31 @@ function handleApply(message: Message) : Promise<void> {
         return Promise.reject();
     }
 
-    if (message.sort || message.insert)
+    if (message.sort)
+        return handleSort(message.excelTable);
+    else if (message.insert)
         return replaceTableData(message.excelTable);
     else if (message.scatter)
         return handleScatter(message.excelTable);
     else
         toast.error('No operation to apply', toastOptins);
     return Promise.reject();
+}
+
+function handleSort(excelTable: ExcelTableData): Promise<void> {
+    return replaceTableData(excelTable).then(() => {
+        Excel.run(async (context) => {
+            let table = context.workbook.tables.getItem(excelTable.tableName);
+            let salesIndex = excelTable.header.indexOf("Sales");
+            if (salesIndex === -1) {
+                toast.error('No "Sales" column found', toastOptins);
+                return;
+            }
+
+            table.sort.apply([{ key: salesIndex, ascending: false }]);
+            await context.sync();
+        })
+    })
 }
 
 function handleScatter(excelTable: ExcelTableData) : Promise<void>{

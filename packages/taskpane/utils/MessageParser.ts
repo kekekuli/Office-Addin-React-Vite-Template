@@ -52,17 +52,8 @@ function handleSort(excelTable: ExcelTableData | null) : Message{
   if (!excelTable)
     return {role: "bot", content: "No table to sort"};
 
-  const salesIndex = excelTable.header.indexOf("Sales");
-  // Copy data but not reference
-  const copiedRows = excelTable.rows.map((row) => [...row]);
-  copiedRows.sort((a, b) => b[salesIndex] - a[salesIndex]);
 
-  const sortedTable = {
-    ...excelTable,
-    rows: copiedRows
-  };
-
-  return { role: "bot", content: "Sorted table", excelTable: sortedTable , sort: true};
+  return { role: "bot", content: "Sorted table", excelTable: excelTable , sort: true};
 }
 
 function handleScatter(excelTable: ExcelTableData | null) : Message{
