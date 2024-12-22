@@ -70,8 +70,8 @@ export default function App() {
   }
 
   function readExcelTable() {
-    getExcelTableNames().then((tableNames) => {
-      parseExcelTableToJson(tableNames[0]).then((excelTable) => {
+    return getExcelTableNames().then((tableNames) => {
+      return parseExcelTableToJson(tableNames[0]).then((excelTable) => {
         setExcelTableData(excelTable);
       })
     })
@@ -82,7 +82,6 @@ export default function App() {
 
   useEffect(() => {
     Office.onReady().then(readExcelTable).then(() => {
-
       if (isDisplayedToast.current) return;
       toast.success('Excel data loaded successfully', toastOptins);
       isDisplayedToast.current = true;
