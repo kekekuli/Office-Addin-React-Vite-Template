@@ -1,4 +1,5 @@
 import type { ExcelTableData } from "../components/ExcelTable";
+import { sendMessage } from "./DatabaseUtils";
 import {DateTime} from "luxon";
 export interface Message{
   role: "user" | "bot";
@@ -8,23 +9,42 @@ export interface Message{
   sort?: boolean;
   insert?: boolean;
   timestap?: string; // In ISO 8601
+  savedId?: string;
 }
 
-export default function MessageParser(message : string, excelTable : ExcelTableData | null) : Message{
+export default function MessageParser(message : string, excelTable : ExcelTableData | null) : Promise<Message> {
   const timestamp = DateTime.now().toISO();
+
+  let processedMessage;
 
   switch (message) {
     case "Sort the table by sales in descending order":
-      return {...handleSort(excelTable), timestap: timestamp};
+      processedMessage = {...handleSort(excelTable), timestap: timestamp};
+      break;
     case "Create a scatter plot of sales and costs":
-      return {...handleScatter(excelTable), timestap: timestamp};
+      processedMessage = {...handleScatter(excelTable), timestap: timestamp};
+      break;
     case "Insert a column of profits":
-      return {...handleInsert(excelTable), timestap: timestamp};
+      processedMessage = {...handleInsert(excelTable), timestap: timestamp};
+      break;
     case "kekekuli":
-      return {role: "bot", content: "为时已晚，有机体!", timestap: timestamp};
+      processedMessage = {role: "bot", content: "为时已晚，有机体!", timestap: timestamp};
+      break;
     default:
-      return {role: "bot", content: "No support for this command", timestap: timestamp};
+      processedMessage = {role: "bot", content: "No support for this command", timestap: timestamp};
+      break;
   }
+
+  return sendMessage(processedMessage).then((response) => {
+    const { savedId } = response;
+    processedMessage.savedId = savedId;
+    return processedMessage;
+  }).catch((errMsg) => {
+    return Promise.reject({
+      message: processedMessage,
+      errMsg: errMsg
+    });
+  });
 }
 
 function handleSort(excelTable: ExcelTableData | null) : Message{

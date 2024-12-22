@@ -13,7 +13,7 @@ import { toastOptins } from '../utils/ToastConfig';
 import { toast } from 'react-toastify';
 import { DateTime } from 'luxon';
 import type { Message } from '../utils/MessageParser';
-import { sendMessage } from '../utils/DatabaseUtils';
+import { sendMessage, getMessages } from '../utils/DatabaseUtils';
 
 export default function App() {
   const [waitingResponse, setWaitingResponse] = useState(false);
@@ -29,18 +29,42 @@ export default function App() {
     const newMessage: Message = { role: 'user', content: message, timestap: timestamp };
 
     setWaitingResponse(() => true);
-    sendMessage(newMessage).then(() => {
-      const response = MessageParser(message, excelTableData);
-      // use arrow function to get the latest state
+    sendMessage(newMessage).then((response) => {
+      // connectted to the server
+      const { savedId } = response;
+      newMessage.savedId = savedId;
       setMessages((prevMessages) => [...prevMessages, newMessage]);
-
-      // Simulate bot response after a delay
-      setTimeout(() => {
-        setMessages((prevMessages) => [...prevMessages, response]);
-        setWaitingResponse(() => false);
-      }, 1000);
-    }).catch();
+    }).catch((msg) => {
+      // server not available for user
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+      toast.error(msg, toastOptins);
+    }).then(() => {
+      // but still need bot response
+      MessageParser(message, excelTableData).then((result) => {
+        // bot response successfully saved to the server
+        // simulate the bot response time
+        setTimeout(() => {
+          setMessages((prevMessages) => [...prevMessages, result]);
+          setWaitingResponse(() => false);
+        }, 1000)
+      }).catch((error) => {
+        setTimeout(() => {
+          // bot response failed to save to the server
+          const { message, errMsg } = error;
+          setMessages((prevMessages) => [...prevMessages, message]);
+          setWaitingResponse(() => false);
+        }, 1000);
+      })
+    })
   }
+  // load history messages
+  useEffect(() => {
+    getMessages().then((messages) => {
+      setMessages(messages);
+    }).catch((error) => {
+      console.error(error);
+    })
+  }, []);
 
   useEffect(() => {
     Office.onReady().then(() => {

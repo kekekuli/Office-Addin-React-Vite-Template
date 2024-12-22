@@ -41,9 +41,30 @@ app.post('/api/saveMessages', async (req, res) => {
   if (db){
     db.run('INSERT INTO messages (message) VALUES (?)', [JSON.stringify(message)]).then((result) => {
       console.log('Message saved', message, "id is", result.lastID);
+      res.status(201).json({success: true, savedId: result.lastID});
     }).catch((error) => {
       console.error(error);
+      res.status(500).json({error: "Internal server error"});
     });
+  }else{
+    res.status(500).json({error: "Database not initialized"});
+  }
+});
+
+app.get('/api/getMessages', async (req, res) => {
+  if (db) {
+    db.all('SELECT * FROM messages').then((rows) => {
+      const messages = rows.map(row => ({
+        ...JSON.parse(row.message),
+        savedId: row.id
+      }));
+      res.status(200).json(messages);
+    }).catch((error) => {
+      console.error(error);
+      res.status(500).json({ error: "Internal server error" });
+    });
+  } else {
+    res.status(500).json({ error: "Database not initialized" });
   }
 });
 
