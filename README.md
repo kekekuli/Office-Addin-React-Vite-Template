@@ -52,3 +52,30 @@ npm run start
 
 如果在运行命令时，遇到需要安装证书，点击确认即可。`npm run start`命令有可能会由于不是管理员而启动失败，确认你的终端有管理员权限。   
 如果插件会话关闭，在excel的**开始**选项卡下找到**Show Taskpane**即可重新打开。
+
+## 代码实现
+
+主要使用React + Mui + tailwind css + typescript。
+
+#### 布局
+聊天室布局分上中下，上下部分占据固定的矩形，中间部分用flex容器实现自动空间增长，滚动。  
+聊天室的气泡是用flex布局 + svg + 阴影实现的。
+#### 主要组件
+**App** 主容器，主要管理状态和使用useEffect的组件。  
+**ChatBubble** 手动实现的一个聊天气泡，只要提供**Message**类型数据就能渲染出一条信息。  
+**MessageList** 聊天气泡们的容器，给聊天气泡提供需要的Message数据  
+**ExcelTable** 用来渲染表格和散点图的，要求提供一个ExcelTableData参数，内部是调用了AG-Grid的组件库来渲染。  
+**ContextProvider** 只是作为容器和一个上下文提供者
+#### 主要类型
+**ExcelTableData** 是一个Excel Table的抽象类型表示，包含一个Excel Table的 headers, rows, name。  
+**Message** 包含了所有渲染一个聊天气泡的数据，只要给出一个Message实例，那么就不用依赖别的就能渲染一个聊天气泡。Message实例有可能会持有一个ExcelTableData，聊天气泡能够解析ExcelTableData从而渲染表格或者散点图。
+#### 状态管理
+主要的状态就是一个包含所有消息的messages，和一个ExcelTableData代表进行操作的Excel Table对象，由App组件管理并分发给子组件。  
+也使用了useContext的上下文去传递嵌套太深的状态量。
+#### utils文件夹下
+**NetUtils.ts** 负责和服务器交互  
+**ExcelParser.ts** 负责和Excel交互  
+**MessageParser.ts** 负责解析用户输入的消息并给出回复
+
+#### 其他 
+消息提示是用ract-toasity库，时间库是用luxon，网络连接用axios，服务器用express + sqlite + 一些中间件，开发服务器用vite

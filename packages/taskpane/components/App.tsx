@@ -3,21 +3,20 @@ import { Box, Stack, Backdrop } from '@mui/material';
 import MessageBox from './MessageList';
 import BoxHeader from './BoxHeader';
 import InputField from './InputField';
-import { testMessages } from '../utils/TestDatas';
 import MessageParser from '../utils/MessageParser';
 import { ToastContainer } from 'react-toastify';
 import type { ExcelTableData } from './ExcelTable';
-import ExcelParserContainer from './ExcelParserContainer';
+import ContextProvider from './ContextProvider';
 import { parseExcelTableToJson, getExcelTableNames } from '../utils/ExcelParser';
 import { toastOptins } from '../utils/ToastConfig';
 import { toast } from 'react-toastify';
 import { DateTime } from 'luxon';
 import type { Message } from '../utils/MessageParser';
-import { sendMessage, getMessages, deleteMessages } from '../utils/DatabaseUtils';
+import { sendMessage, getMessages, deleteMessages } from '../utils/NetUtils';
 
 export default function App() {
   const [waitingResponse, setWaitingResponse] = useState(false);
-  const [messages, setMessages] = useState(testMessages);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [excelTableData, setExcelTableData] = useState<ExcelTableData | null>(null);
 
   // Handle user input
@@ -103,7 +102,7 @@ export default function App() {
   }, []);
 
   return (
-    <ExcelParserContainer excelTableData={excelTableData} applyCallback={readExcelTable}>
+    <ContextProvider applyCallback={readExcelTable}>
       <Stack className='h-screen'>
         <BoxHeader waitingResponse={waitingResponse} onClear={handleClearMessages} />
         <Box className=' overflow-y-scroll flex-grow'>
@@ -111,7 +110,12 @@ export default function App() {
         </Box>
         <InputField onSend={handleSend} waitingResponse={waitingResponse} />
       </Stack>
+      <Backdrop
+        sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+        open={!excelTableData}
+      >
+      </Backdrop>
       <ToastContainer />
-    </ExcelParserContainer>
+    </ContextProvider>
   );
 }

@@ -1,5 +1,5 @@
 import type { ExcelTableData } from "../components/ExcelTable";
-import { sendMessage } from "./DatabaseUtils";
+import { sendMessage } from "./NetUtils";
 import {DateTime} from "luxon";
 export interface Message{
   role: "user" | "bot";
