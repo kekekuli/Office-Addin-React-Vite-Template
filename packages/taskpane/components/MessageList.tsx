@@ -36,10 +36,12 @@ export default function MessageBox({ messages }: MessageListProps) {
         
         // return the wrapper and contents
         return (
-            <ChatBubble position={message.role === "user" ? "right" : "left"} key={index} message={message}>
-                {message.insert && <Box>This will insert new column "Profits = Sales - Costs"</Box>}
-                {message.excelTable ? <ExcelTable excelTable={message.sort ? sortedTable: message.excelTable!} scatter={message.scatter}></ExcelTable> : message.content}
-            </ChatBubble>
+            <Box key={index}>
+                {message.insert && <Box className="ml-3">This will insert new column "Profits = Sales - Costs"</Box>}
+                <ChatBubble position={message.role === "user" ? "right" : "left"} message={message}>
+                    {message.excelTable ? <ExcelTable excelTable={message.sort ? sortedTable : message.excelTable!} scatter={message.scatter}></ExcelTable> : message.content}
+                </ChatBubble>
+            </Box>
         )
     })
 
