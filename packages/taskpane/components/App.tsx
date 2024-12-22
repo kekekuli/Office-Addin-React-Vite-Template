@@ -13,7 +13,7 @@ import { toastOptins } from '../utils/ToastConfig';
 import { toast } from 'react-toastify';
 import { DateTime } from 'luxon';
 import type { Message } from '../utils/MessageParser';
-import { sendMessage, getMessages } from '../utils/DatabaseUtils';
+import { sendMessage, getMessages, deleteMessages } from '../utils/DatabaseUtils';
 
 export default function App() {
   const [waitingResponse, setWaitingResponse] = useState(false);
@@ -67,6 +67,9 @@ export default function App() {
   }, []);
 
   const handleClearMessages = () => {
+    deleteMessages().catch().finally(() => {
+      setMessages([]);
+    })
   }
 
   useEffect(() => {
