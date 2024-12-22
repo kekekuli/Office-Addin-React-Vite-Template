@@ -1,2 +1,54 @@
-配置开发环境
-    使用generator-office模板创建的项目，webpack的HMR不起作用CheckChunkError，多方寻找无果改用react + vite模板
+# 开始使用
+#### 此插件只在**node 22.12.0**上测试过，推荐使用一致的node主版本。运行环境推荐是管理员权限。
+
+### 0.安装必要依赖
+**如无特别说明，给出的命令都是在根目录下运行**
+
+安装客户端依赖。  
+```
+npm install
+```  
+安装服务器依赖。
+```
+cd packages/server
+npm install
+```
+
+### 1.运行插件
+packages/server是一个独立的简易服务器，能够将消息记录存储到本地。即使插件不启动server，也能使用全部功能，但关闭会话后就会丢失消息记录。
+
+#### 1.0 启动消息服务器（如果需要本地缓存历史记录的话）
+
+```
+cd packages/server
+npm run dev
+```
+
+#### 1.1 启动插件
+
+回到根目录下运行
+
+```
+npm run dev
+```
+这会启动一个vite开发服务器，然后再打开一个终端运行
+```
+npm run start
+```
+
+最后就会自动打开一个加载了插件的excel文档。
+
+### 2.插件使用
+
+如果打开的是一个空白文档或者没有 **Excel Table** 存在的文档，那么插件就会拒绝交互并提示错误信息，请确认你打开了一个有着**Excel Table**的文档。[关于Excel Table介绍。](https://support.microsoft.com/en-us/office/overview-of-excel-tables-7ab0bb7d-3a9e-4b56-a3c9-6c94334e492c)  
+
+随后你就可以随意输入命令，插件会给出回应。如果回应是一个Table或者Scatter，那么可以点击旁边的Apply按钮应用操作到文档。
+
+**注意** 每次点击Apply时，都会使用消息中的数据强制替换掉Excel中的数据，会丢失手动修改过的数据。
+
+你可以随意的排列组合点击聊天室里的Apply按钮，插件只跟踪他通过点击Apply按钮做出的修改，如果你手动修改Excel中的数据，将会导致未定义行为。
+
+### 问题追踪
+
+如果在运行命令时，遇到需要安装证书，点击确认即可。`npm run start`命令有可能会由于不是管理员而启动失败，确认你的终端有管理员权限。   
+如果插件会话关闭，在excel的**开始**选项卡下找到**Show Taskpane**即可重新打开。
